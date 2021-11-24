@@ -15,6 +15,7 @@ import time
 from io import BytesIO
 import requests
 import math
+from datetime import datetime, timedelta
 
 # 다나와 사이트 검색
 
@@ -63,10 +64,13 @@ time.sleep(2)
 curPage = 1
 
 # 크롤링할 전체 페이지수
-totalPage = 2
+totalPage = 10
+
+#현재 날짜
+timenow = datetime.today().strftime("%Y%m%d%H%M")
 
 # Excel 처리 선언
-workbook = xlsxwriter.Workbook('data/crawling_result.xlsx')
+workbook = xlsxwriter.Workbook('data/'+ category+'_crawling_result('+ timenow +').xlsx')
 # 워크 시트
 worksheet = workbook.add_worksheet()
 # 엑셀 행 수
@@ -197,4 +201,4 @@ driver2.close()
 # 엑셀 파일 닫기
 workbook.close() # 저장
 
-#출처: https://link2me.tistory.com /2003
+#참조 코드 출처: https://link2me.tistory.com/2003

@@ -41,9 +41,9 @@ driver.set_window_size(1920, 1280)
 driver2.set_window_size(1920, 1280)
 
 
-category = "CPU"
+category = "SSD"
 # 페이지 이동(열고 싶은 URL)
-url1 ='http://prod.danawa.com/list/?cate=112747&15main_11_02'
+url1 ='http://prod.danawa.com/list/?cate=112760'
 driver.get(url1)
 
 # 페이지 내용(JSON형식으로 페이지 내용을 표시)
@@ -64,7 +64,7 @@ time.sleep(2)
 curPage = 1
 
 # 크롤링할 전체 페이지수
-totalPage = 6
+totalPage = 5
 
 #현재 날짜
 timenow = datetime.today().strftime("%Y%m%d%H%M")

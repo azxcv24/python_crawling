@@ -103,7 +103,11 @@ while curPage <= totalPage:
     soup = BeautifulSoup(driver.page_source, 'html.parser')
 
     # 상품 리스트 선택
+
     goods_list = soup.select('li.prod_item.prod_layer')
+    #다나와 페이지중 마지막 쓸모없는 div제거
+    goods_list.pop()
+
     # 페이지 번호 구분 출력
     print('----- Current Page : {}'.format(curPage), '------')
     for v in goods_list:

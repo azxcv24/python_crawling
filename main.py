@@ -16,7 +16,6 @@ from io import BytesIO
 import requests
 import math
 
-
 # 다나와 사이트 검색
 
 options = Options()
@@ -139,17 +138,20 @@ while curPage <= totalPage:
         image_size = len(img_data.getvalue())  # 이미지 사이즈
 
 
-        #이미지 처리까지 하고 상세페이지로 전환(상품설명 이미지 링크가져오기)
+        #상세이미지 가져오기!
         prod_url = v.select_one('p.prod_name > a').get('href')
-
         driver2.get(prod_url)
 
+
         soup2 = BeautifulSoup(driver2.page_source, 'html.parser')
-        prod_page = soup2.select('div.detail_export') #여기서 파싱할 페이지에서 해당 영역 지정
+        prod_page = soup2.select('div.detail_export > div.inner') #여기서 파싱할 페이지에서 해당 영역 지정
+
         img_url2 = ''
+
         for v2 in prod_page:
             time.sleep(5)
-            img_url2 = v2.select_one('#partContents_3_0 > p > img').get('src')
+            img_url2 = v2.select_one('img').get('src') #하도 페이지마다 다르니까 img태그에서 가져온다!
+
 
         # 엑셀 저장(텍스트)
         worksheet.write(excel_row, 0, name)

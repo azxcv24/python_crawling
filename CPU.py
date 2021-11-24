@@ -40,10 +40,10 @@ driver2.implicitly_wait(5)
 driver.set_window_size(1920, 1280)
 driver2.set_window_size(1920, 1280)
 
-#MB,GPU
-category = "MB"
+
+category = "CPU"
 # 페이지 이동(열고 싶은 URL)
-url1 ='http://prod.danawa.com/list/?cate=112751&15main_11_02'
+url1 ='http://prod.danawa.com/list/?cate=112747&15main_11_02'
 driver.get(url1)
 
 # 페이지 내용(JSON형식으로 페이지 내용을 표시)
@@ -103,21 +103,19 @@ while curPage <= totalPage:
     soup = BeautifulSoup(driver.page_source, 'html.parser')
 
     # 상품 리스트 선택
-    goods_list = soup.select('li.prod_item.prod_layer.prod_item_top5')
+    goods_list = soup.select('li.prod_item.prod_layer')
     # 페이지 번호 구분 출력
     print('----- Current Page : {}'.format(curPage), '------')
     for v in goods_list:
         # 상품명, 가격, 이미지 + (추가할것 : 등록일 , 각제품별 상세페이지로 들어가서 상세이미지, 제품 카테고리 써잇는거 모음, 가격에파는 판매자이름)
         #상품명
         name = v.select_one('p.prod_name > a').text.strip()
-        #if not 'APPLE' in name:
-        #     continue
         #가격(정수로 변환,반올림으로 정가 추가)
-        price1 = v.select_one('div.top5_price > em').text.strip()
+        price1 = v.select_one('li.rank_one > p > a > strong').text.strip()
         price1 = int(price1.replace(',',''))
         price0 = round(price1, -(int(math.log10(price1+60000)))) #TODO 올림으로 처리하고 싶은데 방법이 없어 보인다 지금은 반올림(반올림시 할인가격이 더 비싸는 현상 발생) -> 소수점이하로 보낸다음 올림해서 다시 정수로 가져오자!
-        #판매자명
-        mall = v.select_one('div.top5_mall').text.strip()
+        #판매자명(cpu와같이 몰이름이 아닌 사양일경우 그값을 가져오자!)
+        mall = v.select_one('li.rank_one > div >p.memory_sect').text.strip()
         #스팩
         spec_list = v.select_one('div.spec_list').text.strip()
         #등록일

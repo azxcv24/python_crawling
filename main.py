@@ -40,6 +40,7 @@ driver.set_window_size(1920, 1280)
 driver2.set_window_size(1920, 1280)
 
 
+category = "MB"
 # 페이지 이동(열고 싶은 URL)
 url1 ='http://prod.danawa.com/list/?cate=112751&15main_11_02'
 driver.get(url1)
@@ -63,11 +64,6 @@ curPage = 1
 
 # 크롤링할 전체 페이지수
 totalPage = 2
-#TODO 블로그 참고 후 모든페이지 크롤링 가능! => 상세페이지까지 하면 너무 많음!!
-
-
-
-
 
 # Excel 처리 선언
 workbook = xlsxwriter.Workbook('data/crawling_result.xlsx')
@@ -95,9 +91,7 @@ worksheet.write(0, 6, '상세이미지')
 worksheet.write(0, 7, '판매자')
 worksheet.write(0, 8, '등록월')
 worksheet.write(0, 9, '제품페이지')
-worksheet.write(0, 10, '분류') #카테고리 정한 키워드로 넣게 링크에서 딕셔너리로 설정해서 값 가저와서 for으로 한방에 모두 클로링하게 할것!
-
-#TODO 엑셀하고 DB접속해서 바로 넣어버리자!
+worksheet.write(0, 10, '분류')
 
 
 while curPage <= totalPage:
@@ -163,10 +157,12 @@ while curPage <= totalPage:
         if image_size > 0:  # 이미지가 있으면
             # worksheet.insert_image(excel_row, 2, img_url, {'image_data' : img_data})
             worksheet.write(excel_row, 5, img_url)  # image url 텍스트 저장
-        worksheet.write(excel_row, 6, img_url2) #TODO 상세이미지링크
+        worksheet.write(excel_row, 6, img_url2) #상세이미지링크
         worksheet.write(excel_row, 7, mall) #판매자
         worksheet.write(excel_row, 8, insert_date) #등록일
         worksheet.write(excel_row, 9, prod_url)
+        worksheet.write(excel_row, 10, category)
+
 
         # 엑셀 행 증가
         excel_row += 1

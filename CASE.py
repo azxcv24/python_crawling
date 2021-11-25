@@ -151,7 +151,10 @@ while curPage <= totalPage:
 
 
         #상세이미지 가져오기!
-        prod_url = v.select_one('li.rank_one > p.price_sect > a ').get('href')
+        try:
+            prod_url = v.select_one('li.rank_one > p.price_sect > a ').get('href')
+        except Exception as e:
+            prod_url = v.select_one('p.price_sect > a ').get('href')
         driver2.get(prod_url)
 
 

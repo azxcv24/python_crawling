@@ -156,7 +156,10 @@ while curPage <= totalPage:
 
         for v2 in prod_page:
             time.sleep(5)
-            img_url2 = v2.select_one('img').get('src') #하도 페이지마다 다르니까 img태그에서 가져온다!
+            try:
+                img_url2 = v2.select_one('img').get('src') #하도 페이지마다 다르니까 img태그에서 가져온다!
+            except Exception as e:
+                continue
 
 
         # 엑셀 저장(텍스트)

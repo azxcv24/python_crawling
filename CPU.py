@@ -103,9 +103,11 @@ while curPage <= totalPage:
     soup = BeautifulSoup(driver.page_source, 'html.parser')
 
     # 상품 리스트 선택
+
     goods_list = soup.select('li.prod_item.prod_layer')
-    # 다나와 페이지중 마지막 쓸모없는 div제거
+    #다나와 페이지중 마지막 쓸모없는 div제거
     goods_list.pop()
+
     # 페이지 번호 구분 출력
     print('----- Current Page : {}'.format(curPage), '------')
     for v in goods_list:
@@ -113,7 +115,6 @@ while curPage <= totalPage:
         #상품명
         name = v.select_one('p.prod_name > a').text.strip()
         #가격(정수로 변환,반올림으로 정가 추가)
-        #rank_one없는경우 처리 필요!
         try:
             price1 = v.select_one('li.rank_one > p > a > strong').text.strip()
         except Exception as e:
@@ -121,9 +122,14 @@ while curPage <= totalPage:
                 price1 = v.select_one('li > p > a > strong').text.strip()
             except Exception as e:
                 continue
+        try:
+            price1 = int(price1.replace(',',''))
+        except ValueError:
+            continue
+        else:
+            price0 = round(price1, -(int(math.log10(price1+60000)))) #TODO 올림으로 처리하고 싶은데 방법이 없어 보인다 지금은 반올림(반올림시 할인가격이 더 비싸는 현상 발생) -> 소수점이하로 보낸다음 올림해서 다시 정수로 가져오자!
 
-        price1 = int(price1.replace(',',''))
-        price0 = round(price1, -(int(math.log10(price1+60000)))) #TODO 올림으로 처리하고 싶은데 방법이 없어 보인다 지금은 반올림(반올림시 할인가격이 더 비싸는 현상 발생) -> 소수점이하로 보낸다음 올림해서 다시 정수로 가져오자!
+
         #판매자명(cpu와같이 몰이름이 아닌 사양일경우 그값을 가져오자!)
         try:
             mall = v.select_one('li.rank_one > div >p.memory_sect').text.strip()
@@ -151,7 +157,7 @@ while curPage <= totalPage:
 
 
         #상세이미지 가져오기!
-        prod_url = v.select_one('li.rank_one > p.price_sect > a ').get('href')
+        prod_url = v.select_one('p.prod_name > a').get('href')
         driver2.get(prod_url)
 
 
@@ -162,7 +168,10 @@ while curPage <= totalPage:
 
         for v2 in prod_page:
             time.sleep(5)
-            img_url2 = v2.select_one('img').get('src') #하도 페이지마다 다르니까 img태그에서 가져온다!
+            try:
+                img_url2 = v2.select_one('img').get('src') #하도 페이지마다 다르니까 img태그에서 가져온다!
+            except Exception as e:
+                continue
 
 
         # 엑셀 저장(텍스트)

@@ -124,10 +124,11 @@ while curPage <= totalPage:
                 continue
         try:
             price1 = int(price1.replace(',',''))
-            price0 = round(price1, -(int(math.log10(price1+60000)))) #TODO 올림으로 처리하고 싶은데 방법이 없어 보인다 지금은 반올림(반올림시 할인가격이 더 비싸는 현상 발생) -> 소수점이하로 보낸다음 올림해서 다시 정수로 가져오자!
-        except Exception as e:
-            price1,price0 = 0
+        except ValueError:
             continue
+        else:
+            price0 = round(price1, -(int(math.log10(price1+60000)))) #TODO 올림으로 처리하고 싶은데 방법이 없어 보인다 지금은 반올림(반올림시 할인가격이 더 비싸는 현상 발생) -> 소수점이하로 보낸다음 올림해서 다시 정수로 가져오자!
+
 
         #판매자명(cpu와같이 몰이름이 아닌 사양일경우 그값을 가져오자!)
         try:

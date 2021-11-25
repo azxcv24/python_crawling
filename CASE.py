@@ -64,7 +64,7 @@ time.sleep(2)
 curPage = 1
 
 # 크롤링할 전체 페이지수
-totalPage = 6
+totalPage = 10
 
 #현재 날짜
 timenow = datetime.today().strftime("%Y%m%d%H%M")
@@ -114,15 +114,24 @@ while curPage <= totalPage:
         name = v.select_one('p.prod_name > a').text.strip()
         #가격(정수로 변환,반올림으로 정가 추가)
         #rank_one없는경우 처리 필요!
-        if v.select_one('li.rank_one > p > a > strong').text.strip() == 'NoneType':
-            price1 = v.select_one('li > p > a > strong').text.strip()
-        else:
-            price1 = v.select_one('li.rank_one > p > a > strong').text.strip()
+        try:
+            v.select_one('li.rank_one > p > a > strong').text.strip()
+        except Exception as e:
+            try:
+                price1 = v.select_one('li.rank_one > p > a > strong').text.strip()
+            except Exception as e:
+                continue
 
         price1 = int(price1.replace(',',''))
         price0 = round(price1, -(int(math.log10(price1+60000)))) #TODO 올림으로 처리하고 싶은데 방법이 없어 보인다 지금은 반올림(반올림시 할인가격이 더 비싸는 현상 발생) -> 소수점이하로 보낸다음 올림해서 다시 정수로 가져오자!
         #판매자명(cpu와같이 몰이름이 아닌 사양일경우 그값을 가져오자!)
-        mall = v.select_one('li.rank_one > div >p.memory_sect').text.strip()
+        try:
+            mall = v.select_one('li.rank_one > div >p.memory_sect').text.strip()
+        except Exception as e:
+            try:
+                mall = v.select_one('p.memory_sect').text.strip()
+            except Exception as e:
+                continue
         #스팩
         spec_list = v.select_one('div.spec_list').text.strip()
         #등록일
